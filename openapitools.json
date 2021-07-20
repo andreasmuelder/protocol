@@ -7,11 +7,11 @@
       "typescript-angular": {
         "generatorName": "typescript-angular",
         "output": "build/ts",
-        "glob": "klauke-enterprises-api.v2.yaml",
+        "glob": "klauke-enterprises-api.v3.yaml",
         "additionalProperties": {
           "npmName": "@klauke-enterprises/protocol",
           "npmRepository": "https://npm.pkg.github.com",
-          "npmVersion": "3.6.0"
+          "npmVersion": "3.6.1"
         }
       },
       "java": {
