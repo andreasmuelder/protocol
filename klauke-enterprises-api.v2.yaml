@@ -1,0 +1,3005 @@
+openapi: 3.0.3
+info:
+  title: Klauke Enterprises API
+  description: Klauke Enterprises API Description
+  version: 3.3.0
+  termsOfService: 'https://www.klauke-enterprises.com/legal/tos'
+  contact:
+    name: Klauke Enterprises
+    email: fklauke@klauke-enterprises.com
+    url: 'https://www.klauke-enterprises.com'
+  license:
+    name: MIT
+    url: 'https://www.github.com/klauke-enterprises/protocol/LICENSE'
+servers:
+  - url: 'https://api.klauke-enterprises.com/v2'
+    description: Production API
+  - url: 'https://sandbox.api.klauke-enterprises.com/v2'
+    description: Sandbox API
+  - description: Staging API
+    url: 'https://staging.api.klauke-enterprises.com/v2'
+tags:
+  - name: Datacenter
+    description: Data center level assets
+  - name: Project
+    description: Managed project namespaces and resources
+  - name: DNS
+    description: Managed DNS Zones
+  - name: DDoS Protection
+    description: Manage and analyze ddos protection & ddos related data
+  - name: Accounting
+    description: Accounting and invoicing
+  - name: Compute
+    description: Computational resources
+  - name: Bare Metal
+    description: Managed your bare metal resources
+  - name: Registrar
+    description: Manage domain registrations
+  - name: Support
+    description: Create and manage support tickets
+  - name: IPAM
+    description: Managed IPs and Traffic data
+  - name: Key Management
+    description: Manage your SSH Keys
+  - name: Networking
+    description: Configure and monitor networking
+paths:
+  /projects:
+    get:
+      summary: findProjects
+      tags:
+        - Project
+      operationId: findProjects
+      description: Find all projects.
+      security:
+        - oauth2:
+            - project_list
+      responses:
+        '200':
+          $ref: '#/components/responses/ListProjectsResponse'
+    post:
+      summary: createProject
+      operationId: createProject
+      tags:
+        - Project
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+      description: Create a new project.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+        description: ''
+      security:
+        - oauth2:
+            - project_create
+  '/projects/{project_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      summary: projects
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+      operationId: findProject
+      description: Find a specific project.
+      security:
+        - oauth2:
+            - project_read
+    put:
+      summary: updateProject
+      operationId: updateProject
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+      description: Update a specific project.
+      security:
+        - oauth2:
+            - project_write
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+    delete:
+      summary: deleteProject
+      operationId: deleteProject
+      tags:
+        - Project
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific project.
+      security:
+        - oauth2:
+            - project_delete
+  '/projects/{project_id}/zones':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      summary: findZones
+      tags:
+        - DNS
+      responses:
+        '200':
+          $ref: '#/components/responses/ListZonesResponse'
+      operationId: listZones
+      description: List all available zones
+      security:
+        - oauth2:
+            - zone_list
+    post:
+      summary: createZone
+      tags:
+        - DNS
+      operationId: createZone
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateZoneRequest'
+      description: Create a new DNS zone.
+      security:
+        - oauth2:
+            - zone_create
+  '/projects/{project_id}/zones/{zone_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/ZoneId'
+    get:
+      summary: findZone
+      tags:
+        - DNS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Zone'
+      operationId: findZone
+      description: Find a specific zone.
+      security:
+        - oauth2:
+            - zone_read
+    delete:
+      summary: deleteZone
+      operationId: deleteZone
+      tags:
+        - DNS
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific DNS zone.
+      security:
+        - oauth2:
+            - zone_delete
+    put:
+      summary: updateZone
+      operationId: updateZone
+      tags:
+        - DNS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Zone'
+      description: Update a specific zone
+      security:
+        - oauth2:
+            - zone_write
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Zone'
+  '/projects/{project_id}/datacenters':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      summary: findDatacenters
+      tags:
+        - Datacenter
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDatacentersResponse'
+      operationId: findDatacenters
+      description: Find all datacenters that are enabled for your project.
+      security:
+        - oauth2:
+            - datacenter_list
+  '/projects/{project_id}/datacenters/{datacenter_id}/subnetworks':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findSubnetworks
+      tags:
+        - IPAM
+      responses:
+        '200':
+          $ref: '#/components/responses/ListSubnetworksResponse'
+      operationId: findSubnetworks
+      description: Find all subnetworks in a datacenter.
+  '/projects/{project_id}/datacenters/{datacenter_id}/addresses':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findAddresses
+      tags:
+        - IPAM
+      operationId: findAddresses
+      description: Find all addresses in a datacenter.
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAddressesResponse'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          description: ''
+          name: state
+  '/projects/{project_id}/datacenters/{datacenter_id}/subnetworks/{subnetwork_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/SubnetworkId'
+    get:
+      summary: findSubnetwork
+      tags:
+        - IPAM
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subnetwork'
+      operationId: findSubnetwork
+      description: Find a specific subnetwork.
+  '/projects/{project_id}/datacenters/{datacenter_id}/addresses/{address_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/AddressId'
+    get:
+      summary: findAddress
+      tags:
+        - IPAM
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+      operationId: findAddress
+      description: Find a specific Address
+    put:
+      summary: updateAddress
+      operationId: updateAddress
+      tags:
+        - IPAM
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      description: Update a specific address.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findComputeMachines
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeMachinesResponse'
+      operationId: findComputeMachines
+      description: Find all compute machines.
+    post:
+      summary: createComputeMachine
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachine'
+      operationId: createComputeMachine
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeMachine'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CreateComputeMachineRequest'
+      description: Create a new compute machine.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines/{machine_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+    get:
+      summary: findComputeMachine
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachine'
+      operationId: findComputeMachine
+      description: Find a specific compute machine.
+    put:
+      summary: updateMachine
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachine'
+      operationId: updateComputeMachine
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeMachine'
+        description: ''
+      description: Update a specific compute machine.
+    delete:
+      summary: deleteMachine
+      tags:
+        - Compute
+      responses:
+        '204':
+          description: No Content
+      operationId: deleteComputeMachine
+      description: Delete a specific compute machine.
+  /accounting/accounts:
+    get:
+      summary: findBillingAccounts
+      tags:
+        - Accounting
+      responses:
+        '200':
+          $ref: '#/components/responses/ListBillingAccountsResponse'
+      operationId: findBillingAccounts
+      description: Find all billing accounts.
+    post:
+      summary: createBillingAccount
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAccount'
+      operationId: createBillingAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingAccountRequest'
+      description: Create a new billing account.
+  '/accounting/accounts/{account_id}':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      summary: findAccount
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAccount'
+      operationId: findBillingAccount
+      description: Find a specific billing account.
+    put:
+      summary: updateAccount
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAccount'
+      operationId: updateBillingAccount
+      description: Update a specific billing account.
+    delete:
+      summary: deleteAccount
+      tags:
+        - Accounting
+      responses:
+        '204':
+          description: No Content
+      operationId: deleteBillingAccount
+      description: Delete a specific billing account.
+  '/projects/{project_id}/zones/{zone_id}/records':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/ZoneId'
+    get:
+      summary: findRecords
+      tags:
+        - DNS
+      responses:
+        '200':
+          $ref: '#/components/responses/ListZoneRecordsResponse'
+      operationId: findRecords
+      description: |
+        Find all records of a zone.
+    post:
+      summary: ''
+      operationId: createRecord
+      tags:
+        - DNS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Zone'
+      description: Create a record in a zone.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateZoneRecordRequest'
+  '/projects/{project_id}/zones/{zone_id}/records/{record_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/ZoneId'
+      - $ref: '#/components/parameters/RecordId'
+    get:
+      summary: findRecord
+      tags:
+        - DNS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneRecord'
+      operationId: findRecord
+      description: Find a specific zone record.
+    put:
+      summary: updateRecord
+      operationId: updateRecord
+      tags:
+        - DNS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneRecord'
+      description: Update a specific record.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZoneRecord'
+    delete:
+      summary: deleteRecord
+      operationId: deleteRecord
+      tags:
+        - DNS
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific record.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/disks':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findDisks
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDisksResponse'
+      operationId: findDisks
+      description: List all disks.
+    post:
+      summary: createDisk
+      operationId: createDisk
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Disk'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDiskRequest'
+      description: Create a new disk.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/disks/{disk_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/DiskId'
+    get:
+      summary: findDisk
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Disk'
+      operationId: findDisk
+      description: Find a specific disk.
+    put:
+      summary: updateDisk
+      operationId: updateDisk
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Disk'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Disk'
+      description: Update a specific disk.
+    delete:
+      summary: deleteDisk
+      operationId: deleteDisk
+      tags:
+        - Compute
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific disk
+  '/projects/{project_id}/registrar/registrations':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      summary: findRegistrations
+      tags:
+        - Registrar
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDomainRegistrationsResponse'
+      operationId: findRegistrations
+      description: Find all domain registrations.
+    post:
+      summary: createRegistration
+      operationId: createRegistration
+      tags:
+        - Registrar
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainRegistration'
+      description: Register a new domain.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDomainRegistrationRequest'
+  '/projects/{project_id}/registrar/registrations/{registration_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/RegistrationId'
+    get:
+      summary: findRegistration
+      tags:
+        - Registrar
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainRegistration'
+      operationId: findRegistration
+      description: Find a specific registration.
+    put:
+      summary: updateRegistration
+      operationId: updateRegistration
+      tags:
+        - Registrar
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainRegistration'
+      description: Update a domain registration.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainRegistration'
+    delete:
+      summary: deleteRegistration
+      operationId: deleteRegistration
+      tags:
+        - Registrar
+      responses:
+        '204':
+          description: No Content
+      description: Mark a domain for deletion.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines/{machine_id}/backups':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+    get:
+      summary: findBackups
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeMachineBackupsResponse'
+      operationId: findBackups
+      description: Find a specific backup.
+    post:
+      summary: createBackup
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachineBackup'
+      operationId: createBackup
+      description: Create a new backup.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComputeMachineBackupRequest'
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines/{machine_id}/backups/{backup_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+      - $ref: '#/components/parameters/BackupId'
+    get:
+      summary: findBackup
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachineBackup'
+      operationId: findBackup
+      description: Find a specific backup.
+  '/projects/{project_id}/datacenters/{datacenter_id}/networks':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findNetworks
+      tags:
+        - Networking
+      responses:
+        '200':
+          $ref: '#/components/responses/ListNetworksResponse'
+      operationId: findNetworks
+      description: Find all datacenter level networks.
+    post:
+      summary: createNetwork
+      operationId: createNetwork
+      responses:
+        '200':
+          $ref: '#/components/responses/NetworkResponse'
+      description: Create a new network
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Network'
+      tags:
+        - Networking
+  '/accounting/accounts/{account_id}/invoices':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      summary: findInvoices
+      tags:
+        - Accounting
+      responses:
+        '200':
+          $ref: '#/components/responses/ListInvoicesResponse'
+      operationId: findInvoices
+      description: Find all invoices.
+  '/accounting/accounts/{account_id}/invoices/{invoice_id}':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/InvoiceId'
+    get:
+      summary: findInvoice
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+      operationId: findInvoice
+      description: Find a specific endpoints.
+  /support/tickets:
+    get:
+      summary: findTickets
+      tags:
+        - Support
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTicketResponse'
+      operationId: findTickets
+      description: Find all tickets.
+    post:
+      summary: createTicket
+      operationId: createTicket
+      tags:
+        - Support
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketRequest'
+      description: Create a new ticket.
+  '/support/tickets/{ticket_id}':
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    get:
+      summary: findTicket
+      tags:
+        - Support
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+      operationId: findTicket
+      description: Find a specific ticket.
+    put:
+      summary: updateTicket
+      operationId: updateTicket
+      tags:
+        - Support
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+      description: Update a specific ticket.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+  '/accounting/accounts/{account_id}/transactions':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      summary: findTransactions
+      tags:
+        - Accounting
+      responses:
+        '200':
+          $ref: '#/components/responses/ListTransactionsResponse'
+      operationId: findTransactions
+      description: Find all transactions.
+  '/accounting/accounts/{account_id}/transactions/{transaction_id}':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/TransactionId'
+    get:
+      summary: findTransaction
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+      operationId: findTransaction
+      description: Find a specific transaction.
+  '/accounting/accounts/{account_id}/contracts':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      summary: findContracts
+      tags:
+        - Accounting
+      responses:
+        '200':
+          $ref: '#/components/responses/ListContractsResponse'
+      operationId: findContracts
+      description: Find all contracts.
+  '/accounting/accounts/{account_id}/contracts/{contract_id}':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ContractId'
+    get:
+      summary: findContract
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+      operationId: findContract
+      description: Find a specific contract.
+  '/accounting/accounts/{account_id}/debits':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      summary: findDebits
+      tags:
+        - Accounting
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDebitsResponse'
+      operationId: findDebits
+      description: Find all direct debits.
+    post:
+      summary: createDebt
+      operationId: createDebit
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Debit'
+      description: Create a new direct debit.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDebitRequest'
+  '/accounting/accounts/{account_id}/debits/{debit_id}':
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/DebitId'
+    get:
+      summary: findDebit
+      tags:
+        - Accounting
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Debit'
+      operationId: findDebit
+      description: Find a specific debit.
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines/{machine_id}/tasks':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+    get:
+      summary: findComputeMachineTasks
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeMachineTasksResponse'
+      operationId: findComputeMachineTasks
+      description: Find all compute machine tasks.
+    post:
+      summary: createComputeMachineTask
+      operationId: createComputeMachineTask
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachineTask'
+      description: Create a new compute machine task.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComputeMachinkeTaskRequest'
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/machines/{machine_id}/tasks/{task_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      summary: findTask
+      tags:
+        - Compute
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeMachineTask'
+      operationId: findTask
+      description: Find a specific task.
+    delete:
+      summary: deleteComputeMachineTask
+      operationId: deleteComputeMachineTask
+      tags:
+        - Compute
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific compute machine task. This will cancel the given task.
+  '/projects/{project_id}/datacenters/{datacenter_id}/metal/machines':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findBareMetalMachines
+      tags:
+        - Bare Metal
+      responses:
+        '200':
+          $ref: '#/components/responses/ListBareMetalMachinesResponse'
+      operationId: findBareMetalMachines
+      description: List all bare metal machines
+    post:
+      summary: createBareMetalMachine
+      operationId: createBareMetalMachine
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BareMetalMachine'
+      description: Create a new bare metal machine
+      tags:
+        - Bare Metal
+  '/projects/{project_id}/datacenters/{datacenter_id}/ddos/alerts':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findDdosAlerts
+      tags:
+        - DDoS Protection
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDdosAlertsResponse'
+      operationId: findDdosAlerts
+      description: Find all ddos alerts.
+    post:
+      summary: createDdosAlert
+      operationId: createDdosAlert
+      responses:
+        '200':
+          $ref: '#/components/responses/DdosAlertResponse'
+      tags:
+        - DDoS Protection
+      description: Create a new ddos alert
+  '/projects/{project_id}/datacenters/{datacenter_id}/metal/machines/{machine_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/MachineId'
+    get:
+      summary: findBareMetalMachine
+      tags:
+        - Bare Metal
+      responses:
+        '200':
+          $ref: '#/components/responses/BareMetalMachineResponse'
+      operationId: findBareMetalMachine
+      description: Find a specific bare metal machine
+    delete:
+      summary: deleteBareMetalMachine
+      operationId: deleteBareMetalMachine
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific bare metal machine
+      tags:
+        - Bare Metal
+    put:
+      summary: updateBareMetalMachine
+      operationId: updateBareMetalMachine
+      responses:
+        '200':
+          $ref: '#/components/responses/BareMetalMachineResponse'
+      description: Update a specific bare metal machine
+      tags:
+        - Bare Metal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BareMetalMachine'
+  '/projects/{project_id}/datacenters/{datacenter_id}/ddos/alerts/{alert_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/AlertId'
+    get:
+      summary: findDdosAlert
+      tags:
+        - DDoS Protection
+      responses:
+        '200':
+          $ref: '#/components/responses/DdosAlertResponse'
+      operationId: findDdosAlert
+      description: Find a specific ddos alert
+    put:
+      summary: updateDdosAlert
+      operationId: updateDdosAlert
+      responses:
+        '200':
+          $ref: '#/components/responses/DdosAlertResponse'
+      description: Update a specific ddos alert
+      tags:
+        - DDoS Protection
+    delete:
+      summary: deleteDdosAlert
+      operationId: deleteDdosAlert
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific ddos alert
+      tags:
+        - DDoS Protection
+  '/projects/{project_id}/keypairs':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      summary: findKeypairs
+      tags:
+        - Key Management
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKeypairsResponse'
+      operationId: findKeypairs
+      description: Find all keypairs of a proejct
+    post:
+      summary: createKeypair
+      operationId: createKeypair
+      responses:
+        '200':
+          $ref: '#/components/responses/KeypairResponse'
+      description: Create a new Keypair
+      tags:
+        - Key Management
+  '/projects/{project_id}/keypairs/{keypair_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/KeypairId'
+    get:
+      summary: findKeypair
+      tags:
+        - Key Management
+      responses:
+        '200':
+          $ref: '#/components/responses/KeypairResponse'
+      operationId: findKeypair
+      description: Find a single keypair
+    put:
+      summary: updateKeypair
+      operationId: updateKeypair
+      responses:
+        '200':
+          $ref: '#/components/responses/KeypairResponse'
+      description: Update a single key pair
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Keypair'
+        description: ''
+      tags:
+        - Key Management
+    delete:
+      summary: deleteKeypair
+      operationId: deleteKeypair
+      responses:
+        '204':
+          description: No Content
+      description: Delete a single key pair
+      tags:
+        - Key Management
+  '/projects/{project_id}/datacenters/{datacenter_id}/networks/{network_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/NetworkId'
+    get:
+      summary: findNetwork
+      tags:
+        - Networking
+      responses:
+        '200':
+          $ref: '#/components/responses/NetworkResponse'
+      operationId: findNetwork
+      description: Find a specific network
+    delete:
+      summary: deleteNetwork
+      operationId: deleteNetwork
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific network
+      tags:
+        - Networking
+    put:
+      summary: updateNetwork
+      operationId: updateNetwork
+      responses:
+        '200':
+          $ref: '#/components/responses/NetworkResponse'
+      description: Update a specific network
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Network'
+      tags:
+        - Networking
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/address-sets':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findComputeFirewallAddressSets
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeFirewallAddressSetsResponse'
+      operationId: findComputeFirewallAddressSets
+      description: Find all compute firewall address sets
+    post:
+      summary: createFirewallAddressSet
+      operationId: createFirewallAddressSet
+      responses:
+        '200':
+          description: OK
+      description: Create a new firewall address set
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/address-sets/{address_set_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallAddressSetId'
+    get:
+      summary: findComputeFirewallAdressSet
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallAddressSetResponse'
+      operationId: findComputeFirewallAdressSet
+      description: Find a specific compute firewall address set
+    put:
+      summary: updateComputeFirewallAdressSet
+      operationId: updateComputeFirewallAdressSet
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallAddressSetResponse'
+      description: Update a specific compute firewall address set
+      tags:
+        - Compute
+    delete:
+      summary: deleteComputeFirewallAdressSet
+      operationId: deleteComputeFirewallAdressSet
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific compute firewall address set
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/address-sets/{address_set_id}/addresses':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallAddressSetId'
+    get:
+      summary: findComputeFirewallAdressSetAddresses
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeFirewallAddressesResponse'
+      operationId: findComputeFirewallAdresses
+      description: Find all addresses in a compute firewall address set.
+    post:
+      summary: createComputeFirewallAddressSetAddress
+      operationId: createComputeFirewallAddress
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallAddressResponse'
+      tags:
+        - Compute
+      description: Create a new compute firewall address set address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeFirewallAddress'
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/address-sets/{address_set_id}/addresses/{address_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallAddressSetId'
+      - $ref: '#/components/parameters/ComputeFirewallAddressId'
+    get:
+      summary: findComputeFirewallAddress
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallAddressResponse'
+      operationId: findComputeFirewallAddress
+      description: Find a specific compute fireall address
+    put:
+      summary: updateComputeFirewallAddress
+      operationId: updateComputeFirewallAddress
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallAddressResponse'
+      description: Update a specific compute fireall address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeFirewallAddress'
+      tags:
+        - Compute
+    delete:
+      summary: deleteComputeFirewallAddress
+      operationId: deleteComputeFirewallAddress
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific compute fireall address
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/rule-sets':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+    get:
+      summary: findComputeFirewallRuleSets
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeFirewallRuleSetsResponse'
+      operationId: findComputeFirewallRuleSets
+      description: Find all compute firewall rule sets
+    post:
+      summary: createComputeFirewallRuleSet
+      operationId: createComputeFirewallRuleSet
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleSetResponse'
+      description: Create a new Compute firewall rule set
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/rule-sets/{rule_set_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallRuleSetId'
+    get:
+      summary: findComputeFirewallRuleSet
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleSetResponse'
+      operationId: findComputeFirewallRuleSet
+      description: Find all compute firewall rule sets
+    put:
+      summary: updateComputeFirewallRuleSet
+      operationId: updateComputeFirewallRuleSet
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleSetResponse'
+      description: Update a specific compute firewall rule set
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeFirewallRuleSet'
+      tags:
+        - Compute
+    delete:
+      summary: deleteComputeFirewallRuleSet
+      operationId: deleteComputeFirewallRuleSet
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specifci rcompute firewall rule set
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/rule-sets/{rule_set_id}/rules':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallRuleSetId'
+    get:
+      summary: findComputeFirewallRules
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ListComputeFirewallRulesResponse'
+      operationId: findComputeFirewallRules
+      description: Find all firewall rules in a rule set
+    post:
+      summary: createComputeFirewallRules
+      operationId: createComputeFirewallRules
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleResponse'
+      description: Create a new compute firewall rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeFirewallRule'
+        description: ''
+      tags:
+        - Compute
+  '/projects/{project_id}/datacenters/{datacenter_id}/compute/firewall/rule-sets/{rule_set_id}/rules/{rule_id}':
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/DatacenterId'
+      - $ref: '#/components/parameters/ComputeFirewallRuleSetId'
+      - $ref: '#/components/parameters/ComputeFirewallRuleId'
+    get:
+      summary: findComputeFirewallRule
+      tags:
+        - Compute
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleResponse'
+      operationId: findComputeFirewallRule
+      description: Find a specific compute firewall rule
+    put:
+      summary: updateComputeFirewallRule
+      operationId: updateComputeFirewallRule
+      responses:
+        '200':
+          $ref: '#/components/responses/ComputeFirewallRuleResponse'
+      description: Update a specific compute firewall rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ComputeFirewallRule'
+      tags:
+        - Compute
+    delete:
+      summary: deleteComputeFirewallRule
+      operationId: deleteComputeFirewallRule
+      responses:
+        '204':
+          description: No Content
+      description: Delete a specific compute firewall rule
+      tags:
+        - Compute
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      description: Klauke Enterprises Bearer Token provided by OAuth2
+    oauth2:
+      type: oauth2
+      description: Klauke Enterprises OAuth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://auth.klauke-enterprises.com/oauth2/authorize'
+          tokenUrl: 'https://auth.klauke-enterprises.com/oauth2/token'
+          scopes:
+            project_list: List projects
+            project_read: Read project info
+            project_create: Create projects
+            project_delete: Delete projects
+            project_write: Update projects
+            zone_list: List DNS Zones
+            zone_read: Read DNS Zones
+            zone_create: Create DNS Zones
+            zone_delete: Delete DNS Zones
+            zone_write: Update DNS Zones
+            datacenter_list: List datacenters
+            datacenter_read: Read datacenter info
+    openid-connect:
+      type: openIdConnect
+      openIdConnectUrl: auth.klauke-enterprises.com
+      description: Klauke Enterprises OpenId Connect
+  schemas:
+    Project:
+      title: Project
+      type: object
+      x-examples:
+        example-project:
+          id: 10176820-8fc9-4f85-87c5-dbec701fa4b7
+          title: Just another random app
+          description: This project is my main reason to survive
+          create_time: '2019-08-24T14:15:22Z'
+          update_time: '2019-08-24T14:15:22Z'
+      description: Cloud Project used as a namespace for resources.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 10176820-8fc9-4f85-87c5-dbec701fa4b7
+        title:
+          type: string
+          example: Random app
+          minLength: 3
+          maxLength: 16
+        description:
+          type: string
+          example: This project is my main reason to survive
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+      required:
+        - title
+    CreateProjectRequest:
+      title: CreateProjectRequest
+      description: ''
+      x-examples:
+        projct-creation-example:
+          project:
+            title: Random app
+            description: This project is my main reason to survive
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+      required:
+        - project
+    Zone:
+      title: Zone
+      type: object
+      description: The zone represents a hosted dns zone
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: my-awesome-zone
+        description:
+          type: string
+          example: Just another random zon e
+        domain_name:
+          type: string
+          example: klauke-enterprises.com.
+          format: hostname
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZoneRecord'
+      required:
+        - name
+        - domain_name
+    CreateZoneRequest:
+      title: CreateZoneRequest
+      type: object
+      properties:
+        zone:
+          $ref: '#/components/schemas/Zone'
+      required:
+        - zone
+    Subnetwork:
+      title: Subnetwork
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        creation_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+        gateway:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        ip_cidr:
+          type: string
+          example: 10.0.0.0/24
+        ip6_cidr:
+          type: string
+          example: '2a04:e8c0:8::/45'
+        state:
+          type: string
+          enum:
+            - DRAINING
+            - ACTIVE
+            - INACTIVE
+        network:
+          type: string
+      required:
+        - gateway
+        - name
+    Datacenter:
+      title: Datacenter
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    Address:
+      title: Address
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        state:
+          type: string
+          enum:
+            - RESERVED
+            - READY
+        purpose:
+          type: string
+        subnetwork:
+          type: string
+          format: uuid
+        version:
+          type: string
+          enum:
+            - IPv4
+            - IPv6
+        rdns:
+          type: string
+          format: hostname
+    ComputeMachine:
+      title: ComputeMachine
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 65dc4e6f-1f35-4102-8c8c-e9df8dc18247
+        name:
+          type: string
+          example: sample-machine
+        description:
+          type: string
+        state:
+          type: string
+          enum:
+            - PROVISIONING
+            - RUNNING
+            - STOPPING
+            - SUSPENDING
+            - SUSPENDED
+            - UPDATED
+            - STOPPED
+          default: RUNNING
+        network_interfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkInterface'
+        disks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Disk'
+        hostname:
+          type: string
+          format: hostname
+        flavor:
+          type: string
+        create_time:
+          type: string
+          format: date-time
+      required:
+        - name
+    CreateComputeMachineRequest:
+      title: CreateComputeMachineRequest
+      type: object
+      properties:
+        machine:
+          $ref: '#/components/schemas/ComputeMachine'
+    BillingAccount:
+      title: BillingAccount
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        name:
+          type: string
+        description:
+          type: string
+    CreateBillingAccountRequest:
+      title: CreateBillingAccountRequest
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/BillingAccount'
+    ZoneRecord:
+      title: ZoneRecord
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: example.com.
+        type:
+          type: string
+          enum:
+            - A
+            - AAAA
+            - CAA
+            - CNAME
+            - IPSECKEY
+            - MX
+            - NAPTR
+            - NS
+            - PTR
+            - SOA
+            - SPF
+            - SRV
+            - SSHFP
+            - TLSA
+            - TXT
+          example: A
+        values:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            example: 1.1.1.1
+        ttl:
+          type: integer
+          example: 3600
+          format: int32
+          minimum: 120
+      required:
+        - name
+        - type
+        - values
+        - ttl
+      x-examples:
+        example-record:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: example.com.
+          type: A
+          values:
+            - 1.1.1.1
+          ttl: 3600
+    CreateZoneRecordRequest:
+      title: CreateZoneRecordRequest
+      type: object
+      properties:
+        record:
+          $ref: '#/components/schemas/ZoneRecord'
+      required:
+        - record
+    Disk:
+      title: Disk
+      type: object
+      x-examples:
+        example-1:
+          id: string
+          creation_time: '2019-08-24T14:15:22Z'
+          size: string
+          name: string
+          description: string
+          type: SSD
+          interface: SCSI
+      properties:
+        id:
+          type: string
+        creation_time:
+          type: string
+          format: date-time
+        size:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - SSD
+            - NVMe
+            - HDD
+        interface:
+          type: string
+          enum:
+            - SCSI
+            - NVME
+        source_image:
+          type: string
+    NetworkInterface:
+      title: NetworkInterface
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        subnetwork:
+          type: string
+        address:
+          type: string
+        name:
+          type: string
+    CreateDiskRequest:
+      title: CreateDiskRequest
+      type: object
+      properties:
+        disk:
+          $ref: '#/components/schemas/Disk'
+    DomainRegistration:
+      title: Registration
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        domain_name:
+          type: string
+          format: hostname
+        create_time:
+          type: string
+          format: date-time
+        expire_time:
+          type: string
+          format: date-time
+        state:
+          type: string
+          enum:
+            - UNKNOWN
+            - PENDING
+            - FAILED
+            - ACTIVE
+            - SUSPENDED
+        renewal:
+          type: string
+          enum:
+            - AUTOMATIC
+            - MANUAL
+        dns:
+          type: object
+          properties:
+            nameservers:
+              type: array
+              items:
+                type: string
+                format: hostname
+        contact:
+          type: object
+          properties:
+            registrant_contact:
+              $ref: '#/components/schemas/RegistrantContact'
+            admin_contact:
+              $ref: '#/components/schemas/RegistrantContact'
+            tech_contact:
+              $ref: '#/components/schemas/RegistrantContact'
+            zone_contact:
+              $ref: '#/components/schemas/RegistrantContact'
+      required:
+        - domain_name
+    CreateDomainRegistrationRequest:
+      title: CreateDomainRegistrationRequest
+      type: object
+      properties:
+        id:
+          type: string
+    RegistrantContact:
+      title: RegistrantContact
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - PERSON
+            - ORGANIZATION
+            - ROLE
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+        first_name:
+          type: string
+        last_name:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        postal_address:
+          $ref: '#/components/schemas/PostalAddress'
+      required:
+        - type
+        - gender
+        - first_name
+        - last_name
+    PostalAddress:
+      title: PostalAddress
+      type: object
+      properties:
+        address_lines:
+          type: array
+          minItems: 1
+          maxItems: 2
+          items:
+            type: string
+        postal_code:
+          type: string
+        city:
+          type: string
+        region:
+          type: string
+        house_number:
+          type: string
+      required:
+        - address_lines
+        - postal_code
+        - city
+        - region
+        - house_number
+    ComputeMachineBackup:
+      title: ComputeMachineBackup
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        date:
+          type: string
+          format: date-time
+      required:
+        - name
+        - date
+    CreateComputeMachineBackupRequest:
+      title: CreateComputeMachineBackupRequest
+      type: object
+      properties:
+        backup:
+          $ref: '#/components/schemas/ComputeMachineBackup'
+    Network:
+      title: Network
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+          enum:
+            - PUBLIC
+            - PRIVATE
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+        vlan_id:
+          type: integer
+    Invoice:
+      title: Invoice
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItem'
+        taxes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              rate:
+                type: number
+                format: float
+        amount:
+          type: number
+          format: float
+        state:
+          type: string
+          enum:
+            - UNPAID
+            - PAID
+        dueDate:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date-time
+    Ticket:
+      title: Ticket
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          type: string
+          enum:
+            - ARCHIVED
+            - WAITING_FOR_PROVIDER
+            - WAITING_FOR_CUSTOMER
+            - CLOSED
+        title:
+          type: string
+    CreateTicketRequest:
+      title: CreateTicketRequest
+      type: object
+      properties:
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+    ListTicketResponse:
+      title: ListTicketResponse
+      type: object
+      properties:
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+    Transaction:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        amount:
+          type: number
+          format: float
+        type:
+          type: string
+          enum:
+            - PAYPAL
+            - LASTSCHRIFT
+            - INTERNAL
+        create_time:
+          type: string
+          format: date-time
+    Contract:
+      title: Contract
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+    Debit:
+      title: Debit
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        ref:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        street:
+          type: string
+        house_number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        iban:
+          type: string
+        bic:
+          type: string
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+        sign_state:
+          type: string
+          enum:
+            - SIGNED
+            - UNSIGNED
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    InvoiceItem:
+      title: InvoiceItem
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        unit_price:
+          type: string
+        amount:
+          type: string
+    ComputeMachineTask:
+      title: ComputeMachineTask
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+          enum:
+            - UNKNOWN
+            - RUNNING
+            - FINISHED
+            - CANCELLED
+            - ERRROR
+        type:
+          type: string
+          enum:
+            - START
+            - STOP
+            - SUSPEND
+            - REBOOT
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+      required:
+        - type
+    CreateComputeMachinkeTaskRequest:
+      title: CreateComputeMachinkeTaskRequest
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/ComputeMachineTask'
+    BareMetalMachine:
+      title: BareMetalMachine
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        processor:
+          type: string
+        memory:
+          type: string
+        disk:
+          type: string
+        uplink:
+          type: string
+        primary_address:
+          type: string
+      description: A single bare metal machine.
+    CreateDebitRequest:
+      title: CreateDebitRequest
+      type: object
+      properties:
+        debit:
+          $ref: '#/components/schemas/Debit'
+    DdosAlert:
+      title: DdosAlert
+      type: object
+      description: An alert describing a single ddos event
+      properties:
+        id:
+          type: string
+          format: uuid
+        class:
+          type: string
+          enum:
+            - dos
+        start:
+          type: string
+          format: date-time
+        stop:
+          type: string
+          format: date-time
+        direction:
+          type: string
+        host:
+          type: string
+        impact:
+          type: object
+          properties:
+            bps:
+              type: integer
+            pps:
+              type: integer
+        misuse_types:
+          type: array
+          items:
+            type: string
+      x-examples:
+        DDoS Alert Example:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          class: dos
+          start: '2019-08-24T14:15:22Z'
+          stop: '2019-08-24T14:15:22Z'
+          direction: INCOMING
+          host: 37.114.59.1
+          impact:
+            bps: 6484896498
+            pps: 1655448
+          misuse_types:
+            - IP Fragmentation
+    Keypair:
+      title: Keypair
+      type: object
+      description: Describes an SSH Key pair
+      properties:
+        id:
+          type: string
+          format: uuid
+        public_key:
+          type: string
+        private_key:
+          type: string
+        fingerprint:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - x509
+            - ssh
+      required:
+        - id
+        - public_key
+        - name
+    ComputeFirewallAddressSet:
+      title: ComputeFirewallAddressSet
+      type: object
+      description: A set of addresses addressable by the firewall containing a list of addresses in CIDR format.
+      x-examples: {}
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComputeFirewallAddress'
+    ComputeFirewallAddress:
+      title: ComputeFirewallAddress
+      type: object
+      description: A single address range part of an address set
+      properties:
+        cidr:
+          type: string
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+    ComputeFirewallRule:
+      title: ComputeFirewallRule
+      type: object
+      description: A single firewall rule
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        action:
+          type: string
+          enum:
+            - ACCEPT
+            - DROP
+            - REJECT
+        protocol:
+          type: string
+          enum:
+            - TCP
+            - UDP
+            - ICMP
+            - GRE
+        source_address_set:
+          type: string
+          format: uuid
+        source_port:
+          type: integer
+        destination_address_set:
+          type: string
+          format: uuid
+        destination_port:
+          type: integer
+        direction:
+          type: string
+          enum:
+            - in
+            - out
+    ComputeFirewallRuleSet:
+      title: ComputeFirewallRuleSet
+      type: object
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComputeFirewallRule'
+        name:
+          type: string
+        description:
+          type: string
+      description: A set if firewall rules
+  responses:
+    ListBareMetalMachinesResponse:
+      description: A list of bare metal machines
+      content:
+        application/json:
+          schema:
+            title: ListBareMetalMachinesResponse
+            type: object
+            properties:
+              machines:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BareMetalMachine'
+    ListDdosAlertsResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ListDdosAlertsResponse
+            type: object
+            properties:
+              alerts:
+                type: string
+    ListTransactionsResponse:
+      description: A list of transactions
+      content:
+        application/json:
+          schema:
+            title: ListTransactionsResponse
+            type: object
+            properties:
+              transactions:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    ListContractsResponse:
+      description: A list of contracts.
+      content:
+        application/json:
+          schema:
+            title: ListContractsResponse
+            type: object
+            properties:
+              contracts:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contract'
+    ListNetworksResponse:
+      description: A list of networks
+      content:
+        application/json:
+          schema:
+            title: ListNetworksResponse
+            type: object
+            properties:
+              networks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Network'
+    ListInvoicesResponse:
+      description: A list of invoices.
+      content:
+        application/json:
+          schema:
+            title: ListInvoicesResponse
+            type: object
+            properties:
+              invoices:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+    ListComputeMachineBackupsResponse:
+      description: A list of compute machine backups
+      content:
+        application/json:
+          schema:
+            title: ListComputeMachineBackupsResponse
+            type: object
+            properties:
+              backups:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeMachineBackup'
+    ListDomainRegistrationsResponse:
+      description: A list of domain registrations
+      content:
+        application/json:
+          schema:
+            title: ListDomainRegistrationsResponse
+            type: object
+            properties:
+              registrations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainRegistration'
+    ListZoneRecordsResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ListZoneRecordsResponse
+            type: object
+            properties:
+              records:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ZoneRecord'
+    ListComputeMachinesResponse:
+      description: A list of compute machines
+      content:
+        application/json:
+          schema:
+            title: ListComputeMachinesResponse
+            type: object
+            properties:
+              machines:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeMachine'
+    ListBillingAccountsResponse:
+      description: A list of billing accounts
+      content:
+        application/json:
+          schema:
+            title: ListBillingAccountsResponse
+            type: object
+            properties:
+              accounts:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BillingAccount'
+    ListAddressesResponse:
+      description: A list of addresses
+      content:
+        application/json:
+          schema:
+            title: ListAddressesResponse
+            type: object
+            properties:
+              addresses:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Address'
+    ListDisksResponse:
+      description: A list of disks
+      content:
+        application/json:
+          schema:
+            title: ListDisksResponse
+            type: object
+            properties:
+              disks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Disk'
+    ListDatacentersResponse:
+      description: A list of datacenters.
+      content:
+        application/json:
+          schema:
+            title: ListDatacentersResponse
+            type: object
+            properties:
+              datacenters:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Datacenter'
+    ListSubnetworksResponse:
+      description: A list of subnetworks
+      content:
+        application/json:
+          schema:
+            title: ListSubnetworksResponse
+            type: object
+            properties:
+              subnetworks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subnetwork'
+    ListProjectsResponse:
+      description: A list of projects
+      content:
+        application/json:
+          schema:
+            title: ListProjectsResponse
+            type: object
+            properties:
+              zones:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    ListZonesResponse:
+      description: A list of zones
+      content:
+        application/json:
+          schema:
+            title: ListZonesResponse
+            type: object
+            properties:
+              zones:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Zone'
+    ListDebitsResponse:
+      description: A list of debits
+      content:
+        application/json:
+          schema:
+            title: ListDebitsResponse
+            type: object
+            properties:
+              debits:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Debit'
+    ListComputeMachineTasksResponse:
+      description: A list of compute machine tasks
+      content:
+        application/json:
+          schema:
+            title: ListComputeMachineTasksResponse
+            type: object
+            properties:
+              tasks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeMachineTask'
+    BareMetalMachineResponse:
+      description: A single bare metal machine
+      content:
+        application/json:
+          schema:
+            title: BareMetalMachineResponse
+            type: object
+            properties:
+              machine:
+                $ref: '#/components/schemas/BareMetalMachine'
+    DdosAlertResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: DdosAlertResponse
+            type: object
+            properties:
+              alert:
+                $ref: '#/components/schemas/DdosAlert'
+    ListKeypairsResponse:
+      description: A list of keypairs
+      content:
+        application/json:
+          schema:
+            title: ListKeypairsResponse
+            type: object
+            properties:
+              keypars:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Keypair'
+    KeypairResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: KeypairResponse
+            type: object
+            properties:
+              keypair:
+                $ref: '#/components/schemas/Keypair'
+    NetworkResponse:
+      description: A single network
+      content:
+        application/json:
+          schema:
+            title: NetworkResponse
+            type: object
+            properties:
+              network:
+                $ref: '#/components/schemas/Network'
+    ComputeFirewallAddressSetResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ComputeFirewallAddressSetResponse
+            type: object
+            properties:
+              address_set:
+                $ref: '#/components/schemas/ComputeFirewallAddressSet'
+    ListComputeFirewallAddressSetsResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ListComputeFirewallAddressSetsResponse
+            type: object
+            properties:
+              address_sets:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeFirewallAddressSet'
+    ComputeFirewallAddressResponse:
+      description: A single firewall address
+      content:
+        application/json:
+          schema:
+            title: ComputeFirewallAddressResponse
+            type: object
+            properties:
+              address:
+                $ref: '#/components/schemas/ComputeFirewallAddress'
+    ListComputeFirewallAddressesResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ListComputeFirewallAddressesResponse
+            type: object
+            properties:
+              addresses:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeFirewallAddress'
+    ComputeFirewallRuleSetResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            title: ComputeFirewallRuleSetResponse
+            type: object
+            properties:
+              rule_set:
+                $ref: '#/components/schemas/ComputeFirewallRuleSet'
+    ListComputeFirewallRuleSetsResponse:
+      description: A list of firewall rule sets
+      content:
+        application/json:
+          schema:
+            title: ListComputeFirewallRuleSetsResponse
+            type: object
+            properties:
+              rules_sets:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeFirewallRuleSet'
+    ComputeFirewallRuleResponse:
+      description: A compute firewall rule
+      content:
+        application/json:
+          schema:
+            title: ComputeFirewallRuleResponse
+            type: object
+            properties:
+              rule:
+                $ref: '#/components/schemas/ComputeFirewallRule'
+    ListComputeFirewallRulesResponse:
+      description: A list of compute firewall rules
+      content:
+        application/json:
+          schema:
+            title: ListComputeFirewallRulesResponse
+            type: object
+            properties:
+              rules:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeFirewallRule'
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of the project namespace
+    DatacenterId:
+      name: datacenter_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of the datacenter facility
+    MachineId:
+      name: machine_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id describing single virtual or bare metal machine
+    TicketId:
+      name: ticket_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of the support ticket
+    TaskId:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of the task
+    BackupId:
+      name: backup_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of an accout
+    InvoiceId:
+      name: invoice_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of an invoice
+    ContractId:
+      name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of an contract
+    AddressId:
+      name: address_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of an address
+    ZoneId:
+      name: zone_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a zone
+    RecordId:
+      name: record_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a record
+    AlertId:
+      name: alert_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of an alert
+    DiskId:
+      name: disk_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a disk
+    SubnetworkId:
+      name: subnetwork_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a subnetwork
+    DebitId:
+      name: debit_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a debit
+    TransactionId:
+      name: transaction_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a transaction
+    RegistrationId:
+      name: registration_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a registration
+    KeypairId:
+      name: keypair_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a keypair
+    NetworkId:
+      name: network_id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+        format: uuid
+      description: The id of the network
+    ComputeFirewallAddressSetId:
+      name: address_set_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of a set of firewall addresses
+    ComputeFirewallAddressId:
+      name: address_id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+        format: uuid
+      description: The id of a single address range
+    ComputeFirewallRuleSetId:
+      name: rule_set_id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+        format: uuid
+      description: The id of the rule set
+    ComputeFirewallRuleId:
+      name: rule_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
+      description: The id of the rule
+  examples: {}
