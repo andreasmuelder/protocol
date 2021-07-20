@@ -1,4 +1,4 @@
-name: OpenAPI Generator - Code Generation
+name: OpenAPI - Generator & Release
 
 on:
   workflow_dispatch:

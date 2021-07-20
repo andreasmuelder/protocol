@@ -7,7 +7,7 @@ api is managed.
 
 | Build Status 	| OpenAPI Validation                                                                                                                                                                              	| OpenAPI Code Generation                                                                                                                                                                   	|
 |--------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| main         	| [![OpenAPI Validation](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml) 	| [![GitHub Release](https://github.com/mysteryworlds/chiara/actions/workflows/create-release.yml/badge.svg)](https://github.com/mysteryworlds/chiara/actions/workflows/create-release.yml) 	|
+| main         	| [![OpenAPI Validation](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml) 	| [![OpenAPI Generator - Code Generation](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi.yml) 	|
 
 
 ## API Design
