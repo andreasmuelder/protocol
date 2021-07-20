@@ -1,6 +1,7 @@
 name: OpenAPI Generator - Code Generation
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
