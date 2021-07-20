@@ -14,7 +14,7 @@ jobs:
       uses: Legion2/swagger-ui-action@v1
       with:
         output: docs
-        spec-file: klauke-enterprises-api.v2.yaml
+        spec-file: klauke-enterprises-api.v3.yaml
     - name: Deploy Documentation
       uses: s0/git-publish-subdir-action@develop
       env:

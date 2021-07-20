@@ -11,7 +11,7 @@
         "additionalProperties": {
           "npmName": "@klauke-enterprises/protocol",
           "npmRepository": "https://npm.pkg.github.com",
-          "npmVersion": "3.5.0"
+          "npmVersion": "3.6.0"
         }
       },
       "java": {
