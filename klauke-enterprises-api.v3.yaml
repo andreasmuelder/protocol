@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Klauke Enterprises API
   description: Klauke Enterprises API Description
-  version: 3.6.1
+  version: 3.6.2
   termsOfService: 'https://www.klauke-enterprises.com/legal/tos'
   contact:
     name: Klauke Enterprises

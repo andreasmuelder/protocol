@@ -5,7 +5,6 @@ plugins {
 }
 
 group 'com.klaukeenterprises'
-version '3.6.1'
 
 repositories {
     mavenLocal()
