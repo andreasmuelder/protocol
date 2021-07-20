@@ -1,0 +1,84 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group 'com.klaukeenterprises'
+version '3.5.0'
+
+repositories {
+    mavenLocal()
+    maven { url "https://repo1.maven.org/maven2" }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/releases/"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/klauke-enterprises/protocol")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+dependencies {
+    compileOnly 'com.google.code.gson:gson:2.8.7'
+    compileOnly 'io.springfox:springfox-swagger2:3.0.0'
+    compileOnly 'org.openapitools:jackson-databind-nullable:0.2.1'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web:2.5.2'
+    compileOnly 'org.springframework.boot:spring-boot-starter-security:2.5.2'
+    compileOnly 'javax.validation:validation-api:2.0.1.Final'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                    '../../build/spring/src/main/java'
+            ]
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            findProperty("GPG_KEY") as String,
+            findProperty("GPG_KEY_PASSPHRASE") as String
+    )
+    sign configurations.archives
+    sign publishing.publications.gpr
+}
+
+jar {
+    exclude 'META-INF/spring.factories', 'module-info.class', '.gitkeep', 'META-INF/notice.txt', 'META-INF/license.txt', 'META-INF/spring.tooling', 'META-INF/spring.schemas', 'META-INF/spring.handlers', 'META-INF/NOTICE.txt', 'META-INF/LICENSE.txt', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

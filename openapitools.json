@@ -1,0 +1,56 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "5.2.0",
+    "generators": {
+      "typescript-angular": {
+        "generatorName": "typescript-angular",
+        "output": "build/ts",
+        "glob": "klauke-enterprises-api.v2.yaml",
+        "additionalProperties": {
+          "npmName": "@klauke-enterprises/protocol",
+          "npmRepository": "https://npm.pkg.github.com",
+          "npmVersion": "3.5.0"
+        }
+      },
+      "java": {
+        "generatorName": "java",
+        "output": "build/java",
+        "glob": "klauke-enterprises-api.v2.yaml"
+      },
+      "spring": {
+        "generatorName": "spring",
+        "output": "build/spring",
+        "glob": "klauke-enterprises-api.v2.yaml",
+        "modelPackage": "com.klaukeenterprises.protocol",
+        "packageName": "com.klaukeenterprises.protocol",
+        "invokerPackage": "com.klaukeenterprises.protocol",
+        "apiPackage": "com.klaukeenterprises.protocol",
+        "minimalUpdate": true,
+        "httpUserAgent": "klauke-enterprises/api-v2",
+        "additionalProperties": {
+          "developerEmail": "info@klauke-enterprises.com",
+          "interfaceOnly": "true",
+          "dateLibrary": "java8",
+          "developerName": "Felix Klauke",
+          "groupId": "com.klaukeenterprises",
+          "artifactId": "protocol",
+          "artifactDescription": "Klauke Enterprises API",
+          "artifactUrl": "https://github.com/klauke-enterprises/protocol",
+          "artifactVersion": "0.0.0",
+          "booleanGetterPrefix": "is",
+          "developerOrganization": "Klauke Enterprises",
+          "developerOrganizationUrl": "https://www.klauke-enterprises.com",
+          "licenseName": "MIT",
+          "licenseUrl": "https://github.com/klauke-enterprises/protocol/LICENSE",
+          "serializableModel": "true",
+          "scmConnection": "scm:git:git@github.com:klauke-enterprises/protocol.git",
+          "scmDeveloperConnection": "scm:git:git@github.com:klauke-enterprises/protocol.git",
+          "scmUrl": "https://github.com/klauke-enterprises/protocol",
+          "useTags": "true"
+        }
+      }
+    }
+  }
+}
