@@ -14,6 +14,11 @@ api is managed.
 You may consider the following tips when working on this api:
 - We're mainly using [Stoplight Studio](https://stoplight.io/studio/) for API work
 
+## Third party APIs
+
+This api anticipates the usage of some third party tools. The authentication is built with [FusionAuth](https://fusionauth.io/) or
+any other oauth2 / openid compatible authentication endpoint in mind.
+
 ## Maintainers
 
 - Felix Klauke <[felix@klauke-enterprises.com](mailto:felix@klauke-enterprises.com)>
