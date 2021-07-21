@@ -5,6 +5,7 @@ plugins {
 }
 
 group 'com.klaukeenterprises'
+version = findProperty('version')
 
 repositories {
     mavenLocal()
