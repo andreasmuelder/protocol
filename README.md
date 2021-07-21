@@ -4,11 +4,10 @@ Welcome to he main repository of the klauke enterprises api. From here all work 
 api is managed.
 
 ## Build Status
-
-| Build Status 	| OpenAPI Validation                                                                                                                                                                              	| OpenAPI Code Generation                                                                                                                                                                   	|
-|--------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| main         	| [![OpenAPI Validation](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml) 	| [![OpenAPI Generator - Code Generation](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi.yml) 	|
-
+| Build Status 	| GitHub Release                                                                                                                                                                            	| OpenAPI Generator / Publishing                                                                                                                                                                                 	|
+|--------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| main         	| [![GitHub Release](https://github.com/klauke-enterprises/protocol/actions/workflows/release.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/release.yml) 	| [![OpenAPI Validation](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/validate.yml)                	|
+| dev          	| none                                                                                                                                                                                      	| [![OpenAPI Generator](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi-generate.yml/badge.svg)](https://github.com/klauke-enterprises/protocol/actions/workflows/openapi-generate.yml) 	|
 
 ## API Design
 
