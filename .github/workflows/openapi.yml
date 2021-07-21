@@ -7,9 +7,6 @@ on:
         description: 'Release version'
         required: true
         default: '0.0.1'
-  release:
-    types:
-      - published
 
 jobs:
   validate:
