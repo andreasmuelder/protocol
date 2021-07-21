@@ -41,7 +41,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2.3.0
       with:
         node-version: 12.x
     - run: npm install @openapitools/openapi-generator-cli -g
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Find Version
         id: version
-        uses: CumulusDS/get-yaml-paths-action@v0.1.0
+        uses: CumulusDS/get-yaml-paths-action@v0.1.1
         with:
           file: ../../klauke-enterprises-api.v3.yaml
           version: info.version
@@ -94,12 +94,12 @@ jobs:
           name: klauke-enterprises-api-clients
           path: build
       - name: Cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2.1.6
         with:
           path: .gradle/caches
           key: gradle-cache
       - name: Set up JDK 16
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2.1.0
         with:
           java-version: 16
       - name: Grant execute permission for gradlew
@@ -135,7 +135,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Find Version
         id: version
-        uses: CumulusDS/get-yaml-paths-action@v0.1.0
+        uses: CumulusDS/get-yaml-paths-action@v0.1.1
         with:
           file: klauke-enterprises-api.v3.yaml
           version: info.version
@@ -145,7 +145,7 @@ jobs:
           name: klauke-enterprises-api-clients
           path: build
       - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 14.x
           registry-url: https://npm.pkg.github.com
