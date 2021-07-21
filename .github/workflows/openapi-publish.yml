@@ -86,7 +86,7 @@ jobs:
         id: version
         uses: CumulusDS/get-yaml-paths-action@v0.1.0
         with:
-          file: klauke-enterprises-api.v3.yaml
+          file: ../../klauke-enterprises-api.v3.yaml
           version: info.version
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
