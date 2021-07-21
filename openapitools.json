@@ -17,12 +17,12 @@
       "java": {
         "generatorName": "java",
         "output": "build/java",
-        "glob": "klauke-enterprises-api.v2.yaml"
+        "glob": "klauke-enterprises-api.v3.yaml"
       },
       "spring": {
         "generatorName": "spring",
         "output": "build/spring",
-        "glob": "klauke-enterprises-api.v2.yaml",
+        "glob": "klauke-enterprises-api.v3.yaml",
         "modelPackage": "com.klaukeenterprises.protocol",
         "packageName": "com.klaukeenterprises.protocol",
         "invokerPackage": "com.klaukeenterprises.protocol",
