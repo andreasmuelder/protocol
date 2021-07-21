@@ -12,12 +12,14 @@ info:
     name: MIT
     url: 'https://www.github.com/klauke-enterprises/protocol/LICENSE'
 servers:
-  - url: 'https://api.klauke-enterprises.com/v2'
-    description: Production API
-  - url: 'https://sandbox.api.klauke-enterprises.com/v2'
-    description: Sandbox API
+  - description: Production API
+    url: 'https://api.klauke-enterprises.com/v3'
+  - description: Sandbox API
+    url: 'https://sandbox.api.klauke-enterprises.com/v3'
   - description: Staging API
-    url: 'https://staging.api.klauke-enterprises.com/v2'
+    url: 'https://staging.api.klauke-enterprises.com/v3'
+  - description: Development API
+    url: 'https://dev.api.klauke-enterprises.com/v3'
 tags:
   - name: Datacenter
     description: Data center level assets
