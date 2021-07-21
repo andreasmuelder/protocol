@@ -218,7 +218,7 @@ jobs:
           name: protocol-spring
           path: pkg/protocol-spring/build/libs/*
       - name: Publish package
-        run: ./gradlew build -Pversion=${{ steps.version.outputs.version }}
+        run: ./gradlew publish -Pversion=${{ steps.version.outputs.version }}
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
