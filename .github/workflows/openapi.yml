@@ -228,7 +228,7 @@ jobs:
             ```xml
             <dependency>
               <groupId>com.klaukeenterprises</groupId>
-              <artifactId>protocl</artifactId>
+              <artifactId>protocol</artifactId>
               <version>${{ github.event.inputs.releaseversion }}</version>
             </dependency>
             ```
