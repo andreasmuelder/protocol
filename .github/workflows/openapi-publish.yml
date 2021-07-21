@@ -41,7 +41,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2.3.0
       with:
         node-version: 12.x
     - run: npm install @openapitools/openapi-generator-cli -g
@@ -145,7 +145,7 @@ jobs:
           name: klauke-enterprises-api-clients
           path: build
       - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 14.x
           registry-url: https://npm.pkg.github.com
