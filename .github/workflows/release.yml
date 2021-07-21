@@ -1,0 +1,106 @@
+name: GitHub Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Find Version
+        id: version
+        uses: CumulusDS/get-yaml-paths-action@v0.1.0
+        with:
+          file: klauke-enterprises-api.v3.yaml
+          version: info.version
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v1.0.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
+          body: |
+            Hey there :wave:,
+
+            the new version `${{ steps.version.outputs.version }}` is finally out!
+
+            Thank you for the interest in the klauke enterprises api.
+
+            If you want to support the development of this api and many other awesome pieces
+            of software you can consider sponsoring us.
+
+            ### Usage
+
+            You can use the java protocol definitiobs in your project easily with Maven or Gradle, see examples below:
+
+            #### Gradle
+
+            **Gradle repositories**
+            ```groovy
+            repositories {
+              maven {
+                name = "klauke-enterprises-protocol-github-package-registry"
+                description = "Klauke Enterprises Protocol GitHub Package Registry"
+                url = "https://maven.pkg.github.com/klauke-enterprises/protocol/"
+                credentials {
+                  username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                  password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+              }
+            }
+            ```
+
+            **Gradle dependencies**
+            ```groovy
+            dependencies {
+              implementation 'com.klauke-enterprises:protocol:${{ steps.version.outputs.version }}'
+            }
+            ```
+
+            #### Maven
+
+            **Maven repositories**
+            ```xml
+            <repositories>
+                <repository>
+                    <id>klauke-enterprises-protocol-github-package-registry</id>
+                    <name>Klauke Enterprises Protocol GitHub Package Registry</name>
+                    <url>https://maven.pkg.github.com/klauke-enterproses/protocol/</url>
+                </repository>
+            </repositories>
+            ```
+
+            **Maven dependencies**
+            ```xml
+            <dependency>
+              <groupId>com.klaukeenterprises</groupId>
+              <artifactId>protocol</artifactId>
+              <version>${{ steps.version.outputs.version }}</version>
+            </dependency>
+            ```
+
+            ### Things that changed since last release
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Specification
+        id: upload-release-specification
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: klauke-enterprises-api.v3.yaml
+          asset_name: klauke-enterprises-api.yaml
+          asset_content_type: application/json
