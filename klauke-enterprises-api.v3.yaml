@@ -234,6 +234,18 @@ paths:
       security:
         - oauth2:
             - datacenter_list
+    post:
+      summary: createDatacenter
+      operationId: createDatacenter
+      description: Create a datacenter
+      tags:
+        - Datacenter
+      responses:
+        '201':
+          $ref: '#/components/responses/DatacenterResponse'
+      security:
+        - oauth2:
+            - datacenter_create
   '/projects/{project_id}/datacenters/{datacenter_id}/subnetworks':
     parameters:
       - $ref: '#/components/parameters/ProjectId'
@@ -1519,6 +1531,7 @@ components:
             zone_write: Update DNS Zones
             datacenter_list: List datacenters
             datacenter_read: Read datacenter info
+            datacenter_create: Create datacenters
     openid-connect:
       type: openIdConnect
       openIdConnectUrl: auth.klauke-enterprises.com
@@ -2788,6 +2801,15 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ComputeFirewallRule'
+    DatacenterResponse:
+      description: Single Datacenter
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              datacenter:
+                $ref: '#/components/schemas/Datacenter'
   parameters:
     ProjectId:
       name: project_id
