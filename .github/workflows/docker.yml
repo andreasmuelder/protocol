@@ -17,3 +17,5 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.sha }}
       - name: Push Images
         run: docker-compose -f docker-compose.build.yml push
+        env:
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
