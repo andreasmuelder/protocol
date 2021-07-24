@@ -69,6 +69,9 @@ jobs:
             If you want to support the development of this api and many other awesome pieces
             of software you can consider sponsoring us.
 
+            ### Things that changed since last release
+            ${{ steps.changelog.outputs.changelog }}
+
             ### Usage
 
             You can use the java protocol definitiobs in your project easily with Maven or Gradle, see examples below:
@@ -118,9 +121,6 @@ jobs:
               <version>${{ steps.version.outputs.version }}</version>
             </dependency>
             ```
-
-            ### Things that changed since last release
-            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
       - name: Upload Release Specification
