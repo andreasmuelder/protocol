@@ -173,6 +173,21 @@ jobs:
           name: klauke-enterprises-api-client-${{ matrix.library }}
           path: build/${{ matrix.library }}/
 
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Build Images
+        run: docker-compose -f docker-compose.build.yml build
+        env:
+          DOCKER_IMAGE_TAG: ${{ steps.version.outputs.version }}
+      - name: Push Images
+        run: docker-compose -f docker-compose.build.yml push
+        env:
+          DOCKER_IMAGE_TAG: ${{ steps.version.outputs.version }}
+
   package-protocol-spring:
     runs-on: ubuntu-latest
     needs:

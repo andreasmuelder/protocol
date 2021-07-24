@@ -2,22 +2,22 @@ version: "3.8"
 
 services:
   klauke-enterprises-api-swagger:
-    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-cli
+    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-cli:${DOCKER_IMAGE_TAG}
     build:
       context: .
       dockerfile: docker/swagger/Dockerfile
   klauke-enterprises-api-swagger-ui:
-    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-ui
+    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-ui${DOCKER_IMAGE_TAG}
     build:
       context: .
       dockerfile: docker/swagger-ui/Dockerfile
   klauke-enterprises-api-swagger-editor:
-    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-editor
+    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-editor${DOCKER_IMAGE_TAG}
     build:
       context: .
       dockerfile: docker/swagger-editor/Dockerfile
   klauke-enterprises-api-redoc:
-    image: docker.pkg.github.com/klauke-enterprises/protocol/redoc
+    image: docker.pkg.github.com/klauke-enterprises/protocol/redoc${DOCKER_IMAGE_TAG}
     build:
       context: .
       dockerfile: docker/redoc/Dockerfile
