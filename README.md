@@ -3,6 +3,17 @@
 Welcome to he main repository of the klauke enterprises api. From here all work on the public
 api is managed.
 
+## Documentation
+
+The documentation website lives at the [docs](docs) folder. 
+
+You can find a fair amount of guidelines and general info at the API Design Section.
+
+Relevant links:
+- [Download](https://docs.api.klauke-enterprises.com/klauke-enterprises-api.v3.yaml) latest Specification 
+- Access the Specification in our [Editor](https://docs.api.klauke-enterprises.com/editor)
+- View Specification in as Swagger UI [Docs](https://docs.api.klauke-enterprises.com/)
+
 ## Build Status
 | Build Status 	| GitHub Release                                                                                                                                                                            	| OpenAPI Generator / Publishing                                                                                                                                                                                 	| Docker                                                                                                                                                                          	|
 |--------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
