@@ -18,6 +18,12 @@ You may consider the following tips when working on this api:
 This api anticipates the usage of some third party tools. The authentication is built with [FusionAuth](https://fusionauth.io/) or
 any other oauth2 / openid compatible authentication endpoint in mind.
 
+## Docker
+
+We provide some docker image for maintenance and convenience:
+
+
+
 ## Maintainers
 
 - Felix Klauke <[felix@klauke-enterprises.com](mailto:felix@klauke-enterprises.com)>

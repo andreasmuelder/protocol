@@ -11,4 +11,8 @@ services:
     build:
       context: .
       dockerfile: docker/swagger-ui/Dockerfile
-
+  klauke-enterprises-api-redoc:
+    image: docker.pkg.github.com/klauke-enterprises/protocol/redoc
+    build:
+      context: .
+      dockerfile: docker/redoc/Dockerfile
