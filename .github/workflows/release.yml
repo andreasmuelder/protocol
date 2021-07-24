@@ -177,6 +177,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Find Version
+        id: version
+        uses: CumulusDS/get-yaml-paths-action@v0.1.1
+        with:
+          file: klauke-enterprises-api.v3.yaml
+          version: info.version
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       - name: Build Images
