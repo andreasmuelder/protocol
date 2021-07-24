@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  klauke-enterprises-api-swagger:
+    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-cli
+    build:
+      context: .
+      dockerfile: docker/swagger/Dockerfile
+  klauke-enterprises-api-swagger-ui:
+    image: docker.pkg.github.com/klauke-enterprises/protocol/swagger-ui
+    build:
+      context: .
+      dockerfile: docker/swagger-ui/Dockerfile
+

@@ -1,0 +1,17 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Build Images
+        run: docker compose build -f docker-compose.build.yml
+      - name: Push Images
+        run: docker compose push -f docker-compose.build.yml
