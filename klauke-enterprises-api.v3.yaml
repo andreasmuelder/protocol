@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Klauke Enterprises API
   description: Klauke Enterprises API Description
-  version: 3.8.0
+  version: 3.9.0
   termsOfService: 'https://www.klauke-enterprises.com/legal/tos'
   contact:
     name: Klauke Enterprises
@@ -210,7 +210,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Zone'
-      description: Update a specific zone
+      description: Update a specific zone.
       security:
         - oauth2:
             - zone_write
@@ -3026,4 +3026,3 @@ components:
         format: uuid
         example: 7f5a6b43-2391-44c5-980a-c8be1bd1429b
       description: The id of the rule
-  examples: {}
