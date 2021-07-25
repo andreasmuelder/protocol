@@ -234,11 +234,6 @@ paths:
       security:
         - oauth2:
             - datacenter_list
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateDatacenterRequest'
     post:
       summary: createDatacenter
       operationId: createDatacenter
@@ -255,8 +250,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties: {}
+              $ref: '#/components/schemas/CreateDatacenterRequest'
   '/projects/{project_id}/datacenters/{datacenter_id}/subnetworks':
     parameters:
       - $ref: '#/components/parameters/ProjectId'
