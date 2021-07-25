@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Klauke Enterprises API
   description: Klauke Enterprises API Description
-  version: 3.12.0
+  version: 3.13.0
   termsOfService: 'https://www.klauke-enterprises.com/legal/tos'
   contact:
     name: Klauke Enterprises
@@ -241,11 +241,16 @@ paths:
       tags:
         - Datacenter
       responses:
-        '201':
+        '200':
           $ref: '#/components/responses/DatacenterResponse'
       security:
         - oauth2:
             - datacenter_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatacenterRequest'
   '/projects/{project_id}/datacenters/{datacenter_id}/subnetworks':
     parameters:
       - $ref: '#/components/parameters/ProjectId'
@@ -2434,6 +2439,13 @@ components:
         description:
           type: string
       description: A set if firewall rules
+    CreateDatacenterRequest:
+      title: CreateDatacenterRequest
+      type: object
+      properties:
+        datacenter:
+          $ref: '#/components/schemas/Datacenter'
+      description: A single datacenter
   responses:
     ListBareMetalMachinesResponse:
       description: A list of bare metal machines
@@ -2621,7 +2633,7 @@ components:
             title: ListProjectsResponse
             type: object
             properties:
-              zones:
+              projects:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
