@@ -220,7 +220,7 @@ jobs:
           path: .gradle/caches
           key: gradle-cache
       - name: Set up JDK 16
-        uses: actions/setup-java@v2.2.0
+        uses: actions/setup-java@v2.3.0
         with:
           java-version: 16
           distribution: 'adopt'
